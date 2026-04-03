@@ -11,30 +11,40 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   fullWidth?: boolean;
 }
 
+/**
+ * Design token: Navy #0B1F3A  /  Navy light #1E3A5F
+ * No purple/indigo gradients — clean solid navy.
+ */
 const variantClass: Record<ButtonVariant, string> = {
+  // Primary & gradient are the same → solid navy
   primary:
-    'bg-gradient-to-r from-indigo-600 to-blue-600 text-white shadow-[0_12px_28px_-14px_rgba(37,99,235,0.65)] hover:-translate-y-0.5',
+    'bg-[#0B1F3A] text-white shadow-md shadow-[#0B1F3A]/25 hover:bg-[#1E3A5F] hover:-translate-y-0.5 active:translate-y-0',
   gradient:
-    'bg-gradient-to-r from-indigo-600 to-blue-600 text-white shadow-[0_12px_28px_-14px_rgba(37,99,235,0.65)] hover:-translate-y-0.5',
-  secondary: 'bg-white text-slate-700 border border-slate-200 hover:border-slate-300 hover:bg-slate-50',
-  ghost: 'bg-transparent text-slate-700 hover:bg-slate-100',
-  danger: 'bg-rose-500 text-white hover:bg-rose-600 shadow-[0_10px_25px_-14px_rgba(244,63,94,0.7)]',
-  success: 'bg-emerald-500 text-white hover:bg-emerald-600 shadow-[0_10px_25px_-14px_rgba(16,185,129,0.7)]',
+    'bg-[#0B1F3A] text-white shadow-md shadow-[#0B1F3A]/25 hover:bg-[#1E3A5F] hover:-translate-y-0.5 active:translate-y-0',
+  // Secondary → navy outline
+  secondary:
+    'bg-white text-[#0B1F3A] border-2 border-[#0B1F3A]/25 hover:border-[#0B1F3A]/60 hover:bg-[#f0f5fb] -translate-y-0 active:scale-[0.98]',
+  ghost:
+    'bg-transparent text-[#0B1F3A] hover:bg-[#f0f5fb]',
+  danger:
+    'bg-rose-600 text-white hover:bg-rose-700 shadow-md shadow-rose-600/25 hover:-translate-y-0.5',
+  success:
+    'bg-emerald-600 text-white hover:bg-emerald-700 shadow-md shadow-emerald-600/25 hover:-translate-y-0.5',
 };
 
 const sizeClass: Record<ButtonSize, string> = {
-  sm: 'h-9 px-3 text-sm',
-  md: 'h-11 px-4 text-sm md:text-base',
+  sm: 'h-9 px-3.5 text-sm',
+  md: 'h-11 px-5 text-sm md:text-base',
   lg: 'h-12 px-6 text-base',
 };
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant = 'gradient', size = 'md', fullWidth, type = 'button', ...props }, ref) => (
+  ({ className, variant = 'primary', size = 'md', fullWidth, type = 'button', ...props }, ref) => (
     <button
       ref={ref}
       type={type}
       className={cn(
-        'inline-flex items-center justify-center gap-2 rounded-2xl font-semibold transition duration-300 disabled:cursor-not-allowed disabled:opacity-60',
+        'inline-flex items-center justify-center gap-2 rounded-xl font-semibold transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-60',
         variantClass[variant],
         sizeClass[size],
         fullWidth && 'w-full',

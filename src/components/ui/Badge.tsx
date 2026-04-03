@@ -16,13 +16,13 @@ interface BadgeProps extends Omit<ComponentPropsWithoutRef<'span'>, 'children'> 
 }
 
 const styles: Record<BadgeVariant, string> = {
-  primary: 'bg-indigo-100 text-indigo-700',
+  primary:   'bg-[#dde8f5] text-[#0B1F3A]',
   available: 'bg-emerald-100 text-emerald-700',
-  full: 'bg-rose-100 text-rose-700',
-  pending: 'bg-amber-100 text-amber-700',
+  full:      'bg-rose-100 text-rose-700',
+  pending:   'bg-amber-100 text-amber-700',
   confirmed: 'bg-emerald-100 text-emerald-700',
-  rejected: 'bg-rose-100 text-rose-700',
-  neutral: 'bg-slate-100 text-slate-600',
+  rejected:  'bg-rose-100 text-rose-700',
+  neutral:   'bg-slate-100 text-slate-600',
 };
 
 export default function Badge({ className, variant = 'primary', ...props }: BadgeProps) {
