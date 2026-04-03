@@ -1,4 +1,5 @@
 import { useRef, useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Goal, Dumbbell, Volleyball } from 'lucide-react';
 
 interface GalleryItem {
@@ -100,7 +101,7 @@ function GalleryCard({ item, index }: { item: GalleryItem; index: number }) {
   );
 }
 
-export default function GallerySection() {
+export default function GallerySection({ bookingHref = '/booking' }: { bookingHref?: string }) {
   return (
     <section id="galeri">
       {/* Header */}
@@ -127,12 +128,12 @@ export default function GallerySection() {
           <p className="font-display text-xl font-bold text-white">Siap ikut seru-seruan?</p>
           <p className="text-sky-100 text-sm mt-0.5">Lebih dari 12.000 booking per bulan. Jangan ketinggalan!</p>
         </div>
-        <a
-          href="/booking"
+        <Link
+          to={bookingHref}
           className="flex-shrink-0 inline-flex items-center gap-2 rounded-xl bg-white text-[#0f2d5e] px-6 py-3 text-sm font-bold shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200"
         >
           Booking Lapangan →
-        </a>
+        </Link>
       </div>
     </section>
   );

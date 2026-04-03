@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { CalendarClock, LayoutDashboard, House, Shield, Phone, Menu, X, UserCircle2 } from 'lucide-react';
+import { CalendarClock, LayoutDashboard, House, Shield, Phone, Menu, X, UserCircle2, LogOut, ChevronDown } from 'lucide-react';
 import type { UserRole } from '@/src/types/domain';
 import SportifyLogo from '@/src/components/ui/SportifyLogo';
 
@@ -17,6 +17,18 @@ export default function TopNav({ role, userName, onLogout }: TopNavProps) {
   const location = useLocation();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
+  const profileRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (profileRef.current && !profileRef.current.contains(e.target as Node)) {
+        setProfileOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const bookingHref   = role === 'user' ? '/booking'  : '/pilih-role?next=%2Fbooking';
   const scheduleHref  = role === 'user' ? '/jadwal'   : '/pilih-role?next=%2Fjadwal';
@@ -107,19 +119,46 @@ export default function TopNav({ role, userName, onLogout }: TopNavProps) {
           <div className="hidden md:flex items-center gap-2">
             {role ? (
               <>
-                {role !== 'admin' && (
-                  <div
-                    className={`flex items-center gap-2 rounded-2xl px-3 py-1.5 border ${
-                      transparent ? 'border-white/25 bg-white/10 text-white' : 'border-slate-200 bg-white text-slate-800'
-                    }`}
-                  >
-                    <div className="inline-flex h-7 w-7 items-center justify-center rounded-xl bg-[#dde8f5] text-xs font-bold text-[#0f2d5e]">
-                      {userInitial}
-                    </div>
-                    <span className="text-sm font-semibold">{userName ?? 'Sobat Sportify'}</span>
+                {role === 'admin' ? (
+                  <button onClick={onLogout} className={outlineBtn(transparent)}>Keluar</button>
+                ) : (
+                  <div className="relative" ref={profileRef}>
+                    <button
+                      onClick={() => setProfileOpen(!profileOpen)}
+                      className={`group flex items-center gap-2 rounded-full pl-1.5 pr-3 py-1.5 border transition-all duration-200 cursor-pointer ${
+                        transparent ? 'border-white/25 bg-white/10 text-white hover:bg-white/20' : 'border-slate-200 bg-white text-slate-800 hover:bg-slate-50 shadow-sm'
+                      }`}
+                    >
+                      <div className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[#dde8f5] text-sm font-bold text-[#0f2d5e] shadow-inner group-hover:scale-105 transition-transform">
+                        {userInitial}
+                      </div>
+                      <span className="text-sm font-semibold max-w-[100px] truncate">{userName ?? 'Sobat'}</span>
+                      <ChevronDown size={14} className={`transition-transform duration-200 ${profileOpen ? 'rotate-180' : ''}`} />
+                    </button>
+
+                    {/* Dropdown Menu */}
+                    {profileOpen && (
+                      <div className="absolute right-0 mt-2 w-48 rounded-2xl bg-white p-2 shadow-xl border border-slate-100 origin-top-right animate-in fade-in zoom-in-95 duration-200">
+                        <Link
+                          to="/profil"
+                          onClick={() => setProfileOpen(false)}
+                          className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-[#f0f5fb] hover:text-[#0f2d5e] transition-colors"
+                        >
+                          <UserCircle2 size={16} />
+                          Profil Saya
+                        </Link>
+                        <div className="my-1 h-px bg-slate-100" />
+                        <button
+                          onClick={() => { setProfileOpen(false); onLogout(); }}
+                          className="w-full flex items-center gap-2.5 rounded-xl px-3 py-2 text-sm font-semibold text-red-600 hover:bg-red-50 transition-colors"
+                        >
+                          <LogOut size={16} />
+                          Keluar
+                        </button>
+                      </div>
+                    )}
                   </div>
                 )}
-                <button onClick={onLogout} className={outlineBtn(transparent)}>Keluar</button>
                 {role !== 'admin' && (
                   <button onClick={() => navigate(bookingHref)} className={primaryBtn}>
                     Booking Sekarang
@@ -171,9 +210,16 @@ export default function TopNav({ role, userName, onLogout }: TopNavProps) {
             ))}
             <div className="pt-2 border-t border-slate-100 mt-2 flex gap-2">
               {role ? (
-                <button onClick={onLogout} className="flex-1 py-2.5 rounded-xl border border-slate-200 text-slate-700 font-semibold text-sm hover:bg-slate-50 transition-colors">
-                  Keluar
-                </button>
+                <>
+                  {role !== 'admin' && (
+                    <Link to="/profil" className="flex-1 py-2.5 flex items-center justify-center gap-2 rounded-xl border border-[#0f2d5e] text-[#0f2d5e] font-semibold text-sm hover:bg-[#f0f5fb] transition-colors">
+                      <UserCircle2 size={16} /> Profil
+                    </Link>
+                  )}
+                  <button onClick={onLogout} className="flex-1 py-2.5 flex items-center justify-center gap-2 rounded-xl border border-red-200 text-red-600 font-semibold text-sm hover:bg-red-50 transition-colors">
+                    <LogOut size={16} /> Keluar
+                  </button>
+                </>
               ) : (
                 <>
                   <button onClick={() => navigate('/pilih-role')} className="flex-1 py-2.5 rounded-xl border border-slate-200 text-slate-700 font-semibold text-sm hover:bg-slate-50 transition-colors">

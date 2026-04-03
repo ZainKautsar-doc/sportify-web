@@ -85,7 +85,7 @@ export default function HomePage({ role }: HomePageProps) {
         <TrustSection />
 
         {/* ③ Gallery */}
-        <GallerySection />
+        <GallerySection bookingHref={bookingBaseHref} />
 
         {/* ④ Sport categories */}
         <section className="space-y-6">
