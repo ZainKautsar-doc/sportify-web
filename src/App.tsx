@@ -3,7 +3,6 @@ import { BrowserRouter, Navigate, Route, Routes, useLocation, useNavigate } from
 import { toast, Toaster } from 'sonner';
 import type { User, UserRole } from '@/src/types/domain';
 import TopNav from '@/src/components/layout/TopNav';
-import MobileBottomNav from '@/src/components/layout/MobileBottomNav';
 import Footer from '@/src/components/layout/Footer';
 import RequireRole from '@/src/components/auth/RequireRole';
 import HomePage from '@/src/pages/HomePage';
@@ -154,7 +153,6 @@ function AppContent({
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
-      <MobileBottomNav role={role} />
       {role === 'admin' ? null : <Footer />}
     </>
   );
